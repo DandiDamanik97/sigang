@@ -5,7 +5,7 @@ if(!isset($_SESSION['login'])){
 }
 
 include "koneksi.php";
-include "fungsi.php";
+// include "fungsi.php";
 ?>
 
 <!doctype html>

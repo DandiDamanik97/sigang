@@ -19,15 +19,16 @@
     <![endif]-->
 
       <style>
-        body{
-          background: url(assets/img/mutu.jpg) no-repeat center fixed;
-          -webkit-background-size :cover;
-          -moz-background-size :cover;
-          -o-background-size :cover;
-          backgrond-size :cover;
-        }
-        .container{
-          margin-top: 70px;       
+        body {
+            background: url(assets/img/mutu.jpg) no-repeat center fixed;
+            -webkit-background-size: cover; /* Untuk browser berbasis WebKit (Chrome, Safari) */
+            -moz-background-size: cover;    /* Untuk Firefox */
+            -o-background-size: cover;      /* Untuk Opera */
+            background-size: cover;         /* Standar CSS */
+            }
+
+        .container {
+        margin-top: 70px; /* Margin atas untuk elemen dengan kelas .container */
         }
       </style>
   </head>
@@ -36,7 +37,7 @@
       <div class="col-md-4 col-md-offset-4">
         <div class="panel panel-primary">
           <div class="panel-heading">
-            <h3 class="panel-title"><spam class="glyphicon glyphicon-lock"></spam>LOGIN APLIKASI PENGGAJIAN</h3>
+            <h3 class="panel-title" style="text-align: center;"><span class="glyphicon glyphicon-lock"></span> LOGIN SIGANG</h3>
           </div>
             <div class="panel-body">
               <center>
