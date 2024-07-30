@@ -11,9 +11,9 @@ if(!in_array("purchasing",$_SESSION['admin_akses'])){
 
     <!-- Begin page content -->
     <div class="container">
-      <div class="panel panel-primary">
+      <div class="panel" style="background-color: #33ffeb; color: black;">
         <div class="panel-heading">
-          <h3 class="panel-title" style="text-align: right;">PURCHASING</h3>
+          <h3 class="panel-title" style="text-align: right;" >PURCHASING</h3>
                </div>
   </div>
 
