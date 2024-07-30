@@ -1,3 +1,61 @@
+<?php
+
+//session start,jika sudah login tidak perlu login ulang lagi
+//contoh jika sudah berada di halmaan admin_depan.php ,tiak akan bisa masuk ke halmaan login.php
+session_start();
+if(isset($_SESSION['admin_username'])){
+    header("location:admin_depan.php");
+}
+
+include("koneksi.php");
+
+//default nya kosong
+$username = '';
+$password = '';
+$err = '';
+
+//melakukan pengecekan memastikan username dan password diisi
+if(isset($_POST['login'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    
+    if($username == '' or $password == ''){
+        $err .= "<li>Silahkan masukan username dan password </li>";
+    }
+
+    //setelah di cek jika mmeng tidka terjadi error
+    if(empty($err)){
+        $sql1 = "select * from admin where username = '$username'";
+        $q1 = mysqli_query($koneksi, $sql1);
+        $r1 = mysqli_fetch_array($q1);
+
+    if($r1['password'] != md5($password)){
+        $err .= "<li> Username dan Password Salah, Cek Kembali!</li>";
+    }
+    }
+    //cek dlu apakah punya akses
+    if(empty($err)){
+        $id_login = $r1['id_login'];
+        $sql1 ="select * from admin_akses where id_login = '$id_login'" ;
+        $q1 = mysqli_query($koneksi, $sql1);
+
+        while($r1 = mysqli_fetch_array($q1)){
+            $akses[] = $r1['id_akses']; //keuangan, manager,absensi
+        }
+        //jika tidak punya akses
+        if(empty($akses)){
+            $err .= "<li> Anda tidak memiliki akses ke halaman ini</li>";        }
+    }
+
+    if(empty($err)){
+        $_SESSION['admin_username'] = $username;
+        $_SESSION['admin_akses'] = $akses; //jangan lupa tambahkan sessionnya
+        header("location:admin_depan.php");
+        exit();
+    }
+}
+
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -5,101 +63,54 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>LOGIN APLIKASI PENGGAJIAN PT.INDOWIRA PUTRA</title>
+    <title>LOGIN SIGANG</title>
 
     <!-- Bootstrap -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" href="assets/img/login.jpg" />
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-    <![endif]-->
-
-      <style>
-        body {
-            background: url(assets/img/mutu.jpg) no-repeat center fixed;
-            -webkit-background-size: cover; /* Untuk browser berbasis WebKit (Chrome, Safari) */
-            -moz-background-size: cover;    /* Untuk Firefox */
-            -o-background-size: cover;      /* Untuk Opera */
-            background-size: cover;         /* Standar CSS */
-            }
-
-        .container {
-        margin-top: 70px; /* Margin atas untuk elemen dengan kelas .container */
+    <style>
+        body{
+          background: url(assets/img/mutu.jpg) no-repeat center fixed;
+          -webkit-background-size :cover;
+          -moz-background-size :cover;
+          -o-background-size :cover;
+          backgrond-size :cover;
+        }
+        .container{
+          margin-top: 70px;       
         }
       </style>
-  </head>
-  <body>
-     <div class="container">
+</head>
+<body>
+<div class="container">
       <div class="col-md-4 col-md-offset-4">
         <div class="panel panel-primary">
           <div class="panel-heading">
-            <h3 class="panel-title" style="text-align: center;"><span class="glyphicon glyphicon-lock"></span> LOGIN SIGANG</h3>
+            <h3 class="panel-title  text-center"><span class="glyphicon glyphicon-lock" ></span> LOGIN SIGANG </h3>
           </div>
             <div class="panel-body">
               <center>
                 <img src="assets/img/login.jpg" class="img-circle" alt="logo" width="120px"> 
               </center>
               <hr>
-
-              <?php
-              if($_SERVER['REQUEST_METHOD']=='POST'){
-                  $user = $_POST['username'];
-                  $pass = $_POST['password'];
-                  $p    = md5($pass);
-                  
-                  if($user == '' || $pass ==''){
-                  ?>
-                  <div class="alert alert-warning"><b>Warning</b>Form Anda Belum Lengkap</div>
-                  <?php
-                  } else{
-                    include "koneksi.php";
-                    $sqlLogin = mysqli_query($konek, "SELECT * FROM admin WHERE username='$user' AND password ='$p'");
-                    $jml = mysqli_num_rows($sqlLogin);
-                    $d=mysqli_fetch_array($sqlLogin);
-
-                    if($jml > 0){
-                      session_start();
-                      $_SESSION['login']       = TRUE;
-                      $_SESSION['id']          = $d['idadmin'];
-                      $_SESSION['username']    = $d['username'];
-                      $_SESSION['namalengkap'] = $d['namalengkap'];
-                      
-                      header('Location:index.php');
-                    }else{
-                    ?>
-                    <div class="alert alert-danger"><b>ERROR</b>Username atau Password Salah</div>
-                    <?php
-
-                    }
-
-                  }
-
-              }
-              ?>
-
-              <form action="" method="post" role="form">
-                <div class="form-group">
-                  <input type="text" class="form-control" name="username" placeholder="Username">              
-                </div>
-                <div class="form-group">
-                  <input type="password" class="form-control" name="password" placeholder="Password">              
-                </div>
-                <div class="form-group">
-                  <input type="submit" class="btn btn-primary btn-lg btn-block" value="Login">              
-                </div>
-              </form>
-            </div>
-          </div>
+        <?php
+          if($err) {
+              echo "<ul>$err</ul>";
+          }
+        ?>
+      <form action="" method="post">
+            <input type="text" value="<?php echo $username ?>" name="username" class="form-control" placeholder="Username"> <br>
+            <input type="password" name="password" class="form-control" placeholder="Password"> <br>
+            <input type="submit" name="login" value="LOGIN" class="btn btn-primary btn-lg btn-block">
+      </form>
+           </div>
         </div>
       </div>
+  </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="assets/js/jquery.min.js" ></script>
+    <script src="assets/js/jquery.min.js" ></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="assets/js/bootstrap.min.js"></script>
-  </body>
+ </body>
 </html>

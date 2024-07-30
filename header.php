@@ -1,10 +1,17 @@
 <?php
+// session_start();
+// if(!isset($_SESSION['login'])){
+//   header('Location:login.php');
+// }
+
+// cek terlebih dahulu apakah sudah login atau belum,jika belum maka akan di arahkan ke menu login
 session_start();
-if(!isset($_SESSION['login'])){
-  header('Location:login.php');
+include("koneksi.php");
+if(!isset($_SESSION['admin_username'])){
+    header("location:login.php");
 }
 
-include "koneksi.php";
+// include "koneksi.php";
 // include "fungsi.php";
 ?>
 
@@ -45,13 +52,21 @@ include "koneksi.php";
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
             <li class="active"><a href="./">Home</a></li>
-            <li><a href="solvent.php">SOLVENT</a></li>
-            <li><a href="qc.php">QC</a></li>
-            <li><a href="waterbased.php">WATERBASED</a></li>
-            <li><a href="purchasing.php">PURCHASING</a></li>
+            <?php if(in_array("purchasing",$_SESSION['admin_akses'])){?>
+                    <li><a href="purchasing.php">PURCHASING</a></li>
+            <?php } ?>
+            <?php if(in_array("qc",$_SESSION['admin_akses'])){?>
+                    <li><a href="qc.php">QC</a></li>
+            <?php } ?>
+            <?php if(in_array("solvent",$_SESSION['admin_akses'])){?>
+                    <li><a href="solvent.php">SOLVENT</a></li>
+            <?php } ?>
+            <?php if(in_array("waterbased",$_SESSION['admin_akses'])){?>
+                    <li><a href="waterbased.php">WATERBASED</a></li>
+            <?php } ?>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-            <li><a href="Logout.php">LOGOUT</a></li>
-            </ul>
+        <li><a href="Logout.php">Logout</a></li>
+          </ul>
         </div>
   </nav>
