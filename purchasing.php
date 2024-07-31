@@ -49,7 +49,7 @@ switch($view){
             if ($dh = opendir($dir)){
                 while (($file = readdir($dh)) !== false){
                     if ($file != '.' && $file != '..') {
-                        echo "<li>$file <a href='download.php?file=" . urlencode($file) . "'>Download</a> | <a href='delete.php?file=" . urlencode($file) . "' onclick='return confirm(\"Are you sure?\")'>Delete</a></li>";
+                        echo "<li>$file <a href='download.php?file=" . urlencode($file) . "'>Download</a> | <a href='delete.php?file=" . urlencode($file) . "' onclick='return confirm(\"Anda Yakin?\")'>Delete</a></li>";
                     }
                 }
                 closedir($dh);
@@ -76,33 +76,33 @@ switch($view){
                 $uploadOk = 1;
                 $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-                // Check if file already exists
+                // cek jika file sudah ada
                 if (file_exists($target_file)) {
                     echo "<div class='alert alert-danger'>Sorry, file already exists.</div>";
                     $uploadOk = 0;
                 }
 
-                // Check file size
+                // cek ukuran file
                 if ($_FILES["fileToUpload"]["size"] > 8000000) { // Mengubah batas menjadi 8MB
                     echo "<div class='alert alert-danger'>Sorry, your file is too large.</div>";
                     $uploadOk = 0;
                 }
 
-                // Allow certain file formats
+                // format yang di dukung
                 $allowed_types = array("jpg", "png", "jpeg", "gif", "pdf", "doc", "docx", "txt");
                 if (!in_array($fileType, $allowed_types)) {
                     echo "<div class='alert alert-danger'>Sorry, only JPG, JPEG, PNG, GIF, PDF, DOC, DOCX & TXT files are allowed.</div>";
                     $uploadOk = 0;
                 }
 
-                // Check if $uploadOk is set to 0 by an error
+                // Cek jika $uploadOk error
                 if ($uploadOk == 0) {
                     echo "<div class='alert alert-danger'>Sorry, your file was not uploaded.</div>";
-                // if everything is ok, try to upload file
+                // cek jka semua ok,
                 } else {
                     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
                         echo "<div class='alert alert-success'>The file ". basename($_FILES["fileToUpload"]["name"]). " has been uploaded.</div>";
-                        // Redirect to purchasing.php after successful upload
+                        // Redirect ke purchasing.php setelah sukses upload
                         header("Location: purchasing.php");
                         exit();
                     } else {
